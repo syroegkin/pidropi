@@ -36,6 +36,7 @@ pip-delete-this-directory.txt
 # Unit test / coverage reports
 htmlcov/
 .tox/
+/instructions.txt
 .coverage
 .coverage.*
 .cache
@@ -58,3 +59,4 @@ target/
 
 # PyCharm
 .idea
+pidropi

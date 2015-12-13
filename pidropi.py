@@ -4,7 +4,7 @@ import os
 import configparser
 #from dropbox.files import WriteMode
 from dropbox.exceptions import ApiError, AuthError
-from backup import Mysql as mysql_backup
+from backup.mysql import Mysql as MysqlBackup
 
 if __name__ == '__main__':
 
@@ -34,5 +34,5 @@ if __name__ == '__main__':
     except AuthError as err:
         sys.exit("ERROR: Invalid access token; try re-generating an access token from the app console on the web.")
 
-    mysql = mysql_backup(config)
+    mysql = MysqlBackup(config)
 
