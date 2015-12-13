@@ -11,9 +11,9 @@ class Mysql(Backup):
 
     databases = []
 
-    mysql_login = None
-    mysql_passwd = None
-    mysql_host = None
+    mysqlLogin = None
+    mysqlPasswd = None
+    mysqlHost = None
 
     tmpPostfix = 'sql'
 
@@ -39,7 +39,7 @@ class Mysql(Backup):
         # Getting mysql connection information
         self.set_mysql_credentials(config['mysql'])
 
-        # Seting tmp folder
+        # Setting tmp folder
         self.set_tmp_folder(config['tmp']['tmpFolder'])
 
         # Clean up old folders
@@ -64,10 +64,10 @@ class Mysql(Backup):
         :param cred: dictionary with mysql connection info
         """
         if 'passwd' not in cred or 'login' not in cred or 'host' not in cred:
-            raise ValueError('Not enough creds for mysql')
-        self.mysql_login = cred['login']
-        self.mysql_host = cred['host']
-        self.mysql_passwd = cred['passwd']
+            raise ValueError('Not enough data for mysql')
+        self.mysqlLogin = cred['login']
+        self.mysqlHost = cred['host']
+        self.mysqlPasswd = cred['passwd']
 
     def set_tmp_folder(self, folder):
         """
@@ -83,9 +83,9 @@ class Mysql(Backup):
         os.mkdir(self.tmpFolder + '/' + folder_name)
         for database in self.databases:
             call(['mysqldump',
-                  '-u' + self.mysql_login,
-                  '-p' + self.mysql_passwd,
-                  '-h' + self.mysql_host,
+                  '-u' + self.mysqlLogin,
+                  '-p' + self.mysqlPasswd,
+                  '-h' + self.mysqlHost,
                   '-r' + self.tmpFolder + '/' + folder_name + '/' + database + '.sql',
                   "%s" % database
                   ])

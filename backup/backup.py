@@ -1,7 +1,11 @@
 import os
+from abc import ABCMeta
 
 
+# Abstract class
 class Backup(object):
+
+    __metaclass__ = ABCMeta
 
     tmpFolder = None
     subFolders = None
