@@ -1,5 +1,7 @@
-import os
+from path import path
 from abc import ABCMeta
+import os
+from shutil import rmtree
 
 
 # Abstract class
@@ -8,7 +10,7 @@ class Backup(object):
     __metaclass__ = ABCMeta
 
     tmpFolder = None
-    subFolders = None
+    subFoldersNum = None
 
     def __init__(self, config):
         """
@@ -16,9 +18,9 @@ class Backup(object):
         :param config: Configuration
         """
         if 'tmpFolder' not in config or 'subFolders' not in config['tmpFolder']:
-            self.subFolders = 3
+            self.subFoldersNum = 3
         else:
-            self.subFolders = config['tmpFolder']['subFolders']
+            self.subFoldersNum = config['tmpFolder']['subFolders']
 
     def set_tmp_folder(self, folder):
         """
@@ -36,5 +38,15 @@ class Backup(object):
             os.chmod(self.tmpFolder, 0o777)
 
     def cleanup_sub_folders(self):
-        for folder in os.walk(self.tmpFolder):
-            print(folder[0])
+        directories = path(self.tmpFolder)
+        num_dirs = len(directories.dirs())
+        if num_dirs >= self.subFoldersNum:
+            directories_list = []
+            for directory in directories.walk():
+                if directory.isdir():
+                    directories_list.append(directory)
+            directories_list.sort(reverse=True)
+            while len(directories_list) >= self.subFoldersNum:
+                rmtree(directories_list.pop())
+
+
