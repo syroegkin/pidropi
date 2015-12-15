@@ -79,7 +79,7 @@ class Mysql(Backup):
 
     def dump_databases(self):
         """Backup with mysqldump"""
-        folder_name = time.strftime("%Y%M%d%H%M%S")
+        folder_name = time.strftime("%Y%m%d%H%M%S")
         os.mkdir(self.tmpFolder + '/' + folder_name)
         for database in self.databases:
             call(['mysqldump',
