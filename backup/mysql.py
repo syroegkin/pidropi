@@ -1,7 +1,5 @@
 from subprocess import call
 from backup.backup import Backup
-import time
-import os
 
 
 class Mysql(Backup):
@@ -10,11 +8,9 @@ class Mysql(Backup):
     """
 
     databases = []
-
     mysqlLogin = None
     mysqlPasswd = None
     mysqlHost = None
-
     tmpPostfix = 'sql'
 
     def __init__(self, config):
@@ -24,7 +20,7 @@ class Mysql(Backup):
 
         super().__init__(config)
 
-        # Checking first is everything is ok with config
+        # Check everything is ok with config
         if 'databases' not in config or 'mysql' not in config['databases']:
             raise ValueError('No mysql, nothing to work with')
         if 'mysql' not in config:
@@ -33,31 +29,31 @@ class Mysql(Backup):
         if 'tmp' not in config or 'tmpFolder' not in config['tmp']:
             raise ValueError('Tmp folder is required for this job')
 
-        # Getting databases list information
+        # Get databases list information
         self.set_databases(config['databases']['mysql'])
 
-        # Getting mysql connection information
+        # Get mysql connection information
         self.set_mysql_credentials(config['mysql'])
-
-        # Setting tmp folder
-        self.set_tmp_folder(config['tmp']['tmpFolder'])
-
-        # Clean up old folders
-        self.cleanup_sub_folders()
 
     def backup(self):
         """
-        Make backup
+        Make backup and clean up
         """
         self.dump_databases()
+
+        # Archive
+        super().archive()
+
+        # Clean up old folders
+        self.cleanup_sub_folders()
 
     def set_databases(self, databases):
         """Set up databases list to backup
         :param databases: string, list of databases divided by comma
         """
-        if len(databases) == 0:
+        self.databases = list(map(str.strip, databases.split(',')))
+        if len(self.databases) == 0:
             raise ValueError('databases might be a string')
-        self.databases = map(str.strip, databases.split(','))
 
     def set_mysql_credentials(self, cred):
         """Set up mysql login/pass for connection
@@ -69,18 +65,9 @@ class Mysql(Backup):
         self.mysqlHost = cred['host']
         self.mysqlPasswd = cred['passwd']
 
-    def set_tmp_folder(self, folder):
-        """
-        Set up tmp folder, plus assigning sql postfix
-        :param folder: Tmp folder
-        """
-        self.tmpFolder = folder + '/' + self.tmpPostfix
-        super(Mysql, self).set_tmp_folder(self.tmpFolder)
-
     def dump_databases(self):
         """Backup with mysqldump"""
-        folder_name = time.strftime("%Y%m%d%H%M%S")
-        os.mkdir(self.tmpFolder + '/' + folder_name)
+        folder_name = super().create_current_folder_by_time()
         for database in self.databases:
             call(['mysqldump',
                   '-u' + self.mysqlLogin,
