@@ -1,0 +1,5 @@
+configparser2==4.0
+dropbox==4.0
+requests==2.8.1
+urllib3==1.12
+path.py==8.1.2
