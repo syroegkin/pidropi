@@ -1,5 +1,6 @@
-configparser2==4.0
+configparser2==4.0.0
 dropbox==4.0
-requests==2.8.1
-urllib3==1.12
 path.py==8.1.2
+requests==2.8.1
+six==1.10.0
+urllib3==1.12
