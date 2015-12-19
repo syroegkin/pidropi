@@ -1,5 +1,5 @@
 from subprocess import call
-from backup.backup import Backup
+from backup import Backup
 
 
 class Mysql(Backup):
@@ -18,7 +18,7 @@ class Mysql(Backup):
         :param config:
         """
 
-        super().__init__(config)
+        super(Mysql, self).__init__(config)
 
         # Check everything is ok with config
         if 'databases' not in config or 'mysql' not in config['databases']:
@@ -42,7 +42,7 @@ class Mysql(Backup):
         self.dump_databases()
 
         # Archive
-        super().archive()
+        super(Mysql, self).archive()
 
         # Clean up old folders
         self.cleanup_sub_folders()
@@ -51,7 +51,7 @@ class Mysql(Backup):
         """Set up databases list to backup
         :param databases: string, list of databases divided by comma
         """
-        self.databases = list(map(str.strip, databases.split(',')))
+        self.databases = list(databases.split(','))
         if len(self.databases) == 0:
             raise ValueError('databases might be a string')
 
@@ -67,7 +67,7 @@ class Mysql(Backup):
 
     def dump_databases(self):
         """Backup with mysqldump"""
-        folder_name = super().create_current_folder_by_time()
+        folder_name = super(Mysql, self).create_current_folder_by_time()
         for database in self.databases:
             call(['mysqldump',
                   '-u' + self.mysqlLogin,

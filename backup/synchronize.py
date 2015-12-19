@@ -30,11 +30,11 @@ class Synchronize:
         # Upload files to dropbox
         os.chdir(self.tmpFolder)
         directory = path('.')
-        for file in directory.walk():
-            if file.isfile():
+        for filename in directory.walk():
+            if filename.isfile():
                 try:
-                    self.dbx.files_get_metadata('/' + file[2:])
+                    self.dbx.files_get_metadata('/' + filename[2:])
                 except ApiError:
-                    with open(file, 'rb') as f:
+                    with open(filename, 'rb') as f:
                         data = f.read()
-                    self.dbx.files_upload(data, '/' + file[2:], dropbox.files.WriteMode.overwrite)
+                    self.dbx.files_upload(data, '/' + filename[2:], dropbox.files.WriteMode.overwrite)
