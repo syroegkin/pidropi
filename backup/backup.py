@@ -1,4 +1,3 @@
-from path import path
 from abc import ABCMeta
 from shutil import rmtree
 from subprocess import call
@@ -53,29 +52,22 @@ class Backup(object):
         return folder_name
 
     def archive(self):
-        directories = path(self.tmpFolder)
-        for directory in directories.dirs():
+        directories = [f for f in os.listdir(self.tmpFolder) if os.path.isdir(os.path.join(self.tmpFolder, f))]
+        for directory in directories:
             call(['tar',
                   '-czf',
-                  directory + '.tar.gz',
-                  '-C', directory,
+                  self.tmpFolder + '/' + directory + '.tar.gz',
+                  '-C', self.tmpFolder + '/' + directory,
                   './'])
-            rmtree(directory)
-            # call(['gzip', '-9', directory + '.tar'])
+            rmtree(self.tmpFolder + '/' + directory)
 
     def cleanup_sub_folders(self):
         """
         Clean up folders in backup directory
          keep up to 3 if not defined inb config
         """
-        directory = path(self.tmpFolder)
-        num_files = len(directory.files())
-        if num_files > self.subFoldersNum:
-            files_list = []
-            for file in directory.walk():
-                files_list.append(file)
-            files_list.sort(reverse=True)
-            while len(files_list) > self.subFoldersNum:
-                os.remove(files_list.pop())
-
-
+        files_list = [f for f in os.listdir(self.tmpFolder)
+                      if os.path.isfile(os.path.join(self.tmpFolder, f))]
+        files_list.sort(reverse=True)
+        while len(files_list) > self.subFoldersNum:
+            os.remove(self.tmpFolder + '/' + files_list.pop())

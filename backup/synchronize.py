@@ -3,7 +3,6 @@ import os
 from dropbox.exceptions import AuthError, ApiError
 
 from dropbox.files import FolderMetadata
-from path import path
 
 
 class Synchronize:
@@ -29,12 +28,13 @@ class Synchronize:
     def sync(self):
         # Upload files to dropbox
         os.chdir(self.tmpFolder)
-        directory = path('.')
-        for filename in directory.walk():
-            if filename.isfile():
-                try:
-                    self.dbx.files_get_metadata('/' + filename[2:])
-                except ApiError:
-                    with open(filename, 'rb') as f:
-                        data = f.read()
-                    self.dbx.files_upload(data, '/' + filename[2:], dropbox.files.WriteMode.overwrite)
+        for files in os.walk('.'):
+            for filename in files[2]:
+                filename = files[0] + '/' + filename
+                if os.path.isfile(filename):
+                    try:
+                        self.dbx.files_get_metadata('/' + filename[2:])
+                    except ApiError:
+                        with open(filename, 'rb') as f:
+                            data = f.read()
+                        self.dbx.files_upload(data, '/' + filename[2:], dropbox.files.WriteMode.overwrite)
