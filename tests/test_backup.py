@@ -42,6 +42,9 @@ class TestBackup(unittest.TestCase):
         # Temporary folder has been created
         mock_os.makedirs.assert_called_with(tmp_folder)
 
+    def test_set_tmp_folder_relative(self):
+        pass
+
     @mock.patch('backup.backup.os')
     def test_create_current_folder_by_time(self, mock_os):
         backup = Backup(config)
