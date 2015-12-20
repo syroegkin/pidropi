@@ -48,12 +48,17 @@ class Backup(object):
             os.makedirs(self.tmpFolder)
             os.chmod(self.tmpFolder, 0o777)
 
-    def create_current_folder_by_time(self):
+    def create_current_folder_by_time(self, timed=None):
         """
         Creates folder in current temporary folder with a timestamp as a name
+        :param timed: provide time if we need exact
         :return: folder_name
         """
-        folder_name = time.strftime("%Y%m%d%H%M%S")
+        if timed is not None:
+            folder_name = time.strftime("%Y%m%d%H%M%S", timed)
+        else:
+            folder_name = time.strftime("%Y%m%d%H%M%S")
+
         os.mkdir(self.tmpFolder + '/' + folder_name)
         return folder_name
 

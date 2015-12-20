@@ -1,5 +1,6 @@
 import mock
 import unittest
+import time
 
 from backup.backup import Backup
 from fixtures import config
@@ -48,5 +49,7 @@ class TestBackup(unittest.TestCase):
     @mock.patch('backup.backup.os')
     def test_create_current_folder_by_time(self, mock_os):
         backup = Backup(config)
-        backup.create_current_folder_by_time()
+        current_time = (2015, 12, 20, 23, 26, 30, 6, 354, 0)
+        folder_name = backup.create_current_folder_by_time(current_time)
         self.assertTrue(mock_os.mkdir.called)
+        self.assertEqual(folder_name, ''.join(str(x) for x in current_time[:6]))
