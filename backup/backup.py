@@ -15,17 +15,23 @@ class Backup(object):
     subFoldersNum = None
     tmpPostfix = None
 
+    tmpFolderDefault = '/tmp/pidropi'
+    subFoldersNumDefault = 3
+
     def __init__(self, config):
         """
         Set up number of sub folders
         :param config: Configuration
         """
         if 'tmp' not in config or 'subFolders' not in config['tmp']:
-            self.subFoldersNum = 3
+            self.subFoldersNum = self.subFoldersNumDefault
         else:
             self.subFoldersNum = int(config['tmp']['subFolders'])
 
-        self.set_tmp_folder(config['tmp']['tmpFolder'])
+        if 'tmp' not in config or 'tmpFolder' not in config['tmp']:
+            self.set_tmp_folder(self.tmpFolderDefault)
+        else:
+            self.set_tmp_folder(config['tmp']['tmpFolder'])
 
     def set_tmp_folder(self, folder):
         if folder[0] != "/":
@@ -34,7 +40,7 @@ class Backup(object):
         else:
             self.tmpFolder = folder
 
-        if len(self.tmpPostfix) > 0:
+        if self.tmpPostfix is not None and len(self.tmpPostfix) > 0:
             self.tmpFolder += '/' + self.tmpPostfix
 
         # Create tmp folder if it isn't here

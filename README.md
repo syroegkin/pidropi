@@ -2,9 +2,28 @@
 
 Simple backup library
 
-sudo apt-get install libffi-dev
-sudo apt-get install python-dev
+### Install ###
 
-sudo pip install -r requirements.txt :-(
+```bash
+$ sudo apt-get install libffi-dev
+$ sudo apt-get install python-dev
+```
+
+```bash
+sudo pip install -r requirements.txt
+```
+
 It took ages for me (about 7 minutes)
-##pip install -r requirements.txt --user - wont work
+
+### Test ###
+
+```bash
+$ pip install mock
+```
+
+```bash
+$ pip install nose && nosetests
+```
+
+
+
