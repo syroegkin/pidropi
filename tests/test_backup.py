@@ -53,3 +53,47 @@ class TestBackup(unittest.TestCase):
         folder_name = backup.create_current_folder_by_time(current_time)
         self.assertTrue(mock_os.mkdir.called)
         self.assertEqual(folder_name, ''.join(str(x) for x in current_time[:6]))
+
+    @mock.patch('backup.backup.call')
+    @mock.patch('backup.backup.os')
+    @mock.patch('backup.backup.rmtree')
+    @mock.patch('backup.backup.os.path')
+    def test_archive_with_directories(self, mock_path, mock_rmtree, mock_os, mock_call):
+        mock_os.listdir.return_value = ['123123123', '234234234']
+        mock_path.isdir.return_value = True
+        backup = Backup(config)
+        backup.archive()
+        self.assertTrue(mock_os.listdir.called)
+        self.assertTrue(mock_call.called)
+        self.assertTrue(mock_rmtree.called)
+
+    @mock.patch('backup.backup.call')
+    @mock.patch('backup.backup.os')
+    @mock.patch('backup.backup.rmtree')
+    @mock.patch('backup.backup.os.path')
+    def test_archive_without_directories(self, mock_path, mock_rmtree, mock_os, mock_call):
+        backup = Backup(config)
+        backup.archive()
+        self.assertTrue(mock_os.listdir.called)
+        self.assertFalse(mock_call.called)
+        self.assertFalse(mock_rmtree.called)
+
+    @mock.patch('backup.backup.os')
+    @mock.patch('backup.backup.os.path')
+    def test_cleanup_sub_folders_with_directories_less_than_required(self, mock_path, mock_os):
+        mock_os.listdir.return_value = ['123123123', '234234234']
+        mock_path.isfile.return_value = True
+        backup = Backup(config)
+        backup.cleanup_sub_folders()
+        self.assertTrue(mock_os.listdir.called)
+        self.assertFalse(mock_os.remove.called)
+
+    @mock.patch('backup.backup.os')
+    @mock.patch('backup.backup.os.path')
+    def test_cleanup_sub_folders_with_directories(self, mock_path, mock_os):
+        mock_os.listdir.return_value = ['1', '2', '3', '4', '5', '6', '7', '8']
+        mock_path.isfile.return_value = True
+        backup = Backup(config)
+        backup.cleanup_sub_folders()
+        self.assertTrue(mock_os.listdir.called)
+        self.assertTrue(mock_os.remove.called)

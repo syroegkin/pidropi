@@ -54,16 +54,18 @@ class Backup(object):
         :param timed: provide time if we need exact
         :return: folder_name
         """
+        time_format = "%Y%m%d%H%M%S"
         if timed is not None:
-            folder_name = time.strftime("%Y%m%d%H%M%S", timed)
+            folder_name = time.strftime(time_format, timed)
         else:
-            folder_name = time.strftime("%Y%m%d%H%M%S")
+            folder_name = time.strftime(time_format)
 
         os.mkdir(self.tmpFolder + '/' + folder_name)
         return folder_name
 
     def archive(self):
-        directories = [f for f in os.listdir(self.tmpFolder) if os.path.isdir(os.path.join(self.tmpFolder, f))]
+        directories = [f for f in os.listdir(self.tmpFolder)
+                       if os.path.isdir(os.path.join(self.tmpFolder, f))]
         for directory in directories:
             call(['tar',
                   '-czf',
@@ -75,7 +77,7 @@ class Backup(object):
     def cleanup_sub_folders(self):
         """
         Clean up folders in backup directory
-         keep up to 3 if not defined inb config
+        keep up to 3 if not defined inb config
         """
         files_list = [f for f in os.listdir(self.tmpFolder)
                       if os.path.isfile(os.path.join(self.tmpFolder, f))]
