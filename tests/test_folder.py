@@ -12,11 +12,11 @@ class TestFolder(unittest.TestCase):
         config_changed = copy.deepcopy(config)
         del config_changed['folders']
         with self.assertRaises(ValueError):
-            folder = Folder(config_changed)
+            Folder(config_changed)
 
     @mock.patch.object(Folder, 'set_folders')
     def test_init_single_folder(self, mock_set_folders):
-        folder = Folder(config)
+        Folder(config)
         self.assertTrue(mock_set_folders.called)
 
     def test_set_folders_single_folder(self):

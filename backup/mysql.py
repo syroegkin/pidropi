@@ -26,34 +26,18 @@ class Mysql(Backup):
         if 'mysql' not in config:
             raise ValueError('Mysql connect details are necessary')
 
-        if 'tmp' not in config or 'tmpFolder' not in config['tmp']:
-            raise ValueError('Tmp folder is required for this job')
-
         # Get databases list information
         self.set_databases(config['databases']['mysql'])
 
         # Get mysql connection information
         self.set_mysql_credentials(config['mysql'])
 
-    def backup(self):
-        """
-        Make backup and clean up
-        """
-        self.dump_databases()
-
-        # Archive
-        # super(Mysql, self).archive()
-        self.archive()
-
-        # Clean up old folders
-        self.cleanup_sub_folders()
-
     def set_databases(self, databases):
         """Set up databases list to backup
         :param databases: string, list of databases divided by comma
         """
-        self.databases = list(databases.split(','))
-        if len(self.databases) == 0:
+        self.databases = [x.strip() for x in databases.split(',')]
+        if len(self.databases) == 0 or not any(self.databases):
             raise ValueError('databases might be a string')
 
     def set_mysql_credentials(self, cred):
@@ -66,9 +50,16 @@ class Mysql(Backup):
         self.mysqlHost = cred['host']
         self.mysqlPasswd = cred['passwd']
 
+    def backup(self):
+        """
+        Make backup and clean up
+        """
+        self.dump_databases()
+        self.archive()
+        self.cleanup_sub_folders()
+
     def dump_databases(self):
         """Backup with mysqldump"""
-        # folder_name = super(Mysql, self).create_current_folder_by_time()
         folder_name = self.create_current_folder_by_time()
         for database in self.databases:
             call(['mysqldump',
