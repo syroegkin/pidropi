@@ -37,4 +37,5 @@ class Synchronize:
                     except ApiError:
                         with open(filename, 'rb') as f:
                             data = f.read()
-                        self.dbx.files_upload(data, '/' + filename[2:], dropbox.files.WriteMode.overwrite)
+                        self.dbx.files_upload(data, '/' + filename[2:],
+                                              dropbox.files.WriteMode.overwrite)

@@ -1,6 +1,6 @@
 import mock
 import unittest
-import time
+import copy
 
 from backup.backup import Backup
 from fixtures import config
@@ -18,7 +18,7 @@ class TestBackup(unittest.TestCase):
 
     @mock.patch('backup.backup.os')
     def test_init_backup_defaults(self, mock_os):
-        config_changed = config.copy()
+        config_changed = copy.deepcopy(config)
         del config_changed['tmp']
         backup = Backup(config_changed)
         # Just check we got defaults

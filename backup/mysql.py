@@ -42,7 +42,8 @@ class Mysql(Backup):
         self.dump_databases()
 
         # Archive
-        super(Mysql, self).archive()
+        # super(Mysql, self).archive()
+        self.archive()
 
         # Clean up old folders
         self.cleanup_sub_folders()
@@ -67,7 +68,8 @@ class Mysql(Backup):
 
     def dump_databases(self):
         """Backup with mysqldump"""
-        folder_name = super(Mysql, self).create_current_folder_by_time()
+        # folder_name = super(Mysql, self).create_current_folder_by_time()
+        folder_name = self.create_current_folder_by_time()
         for database in self.databases:
             call(['mysqldump',
                   '-u' + self.mysqlLogin,
