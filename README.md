@@ -19,9 +19,6 @@ It took ages for me (about 7 minutes)
 
 ```bash
 $ pip install mock
-```
-
-```bash
 $ pip install nose && nosetests
 ```
 

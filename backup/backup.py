@@ -64,6 +64,9 @@ class Backup(object):
         return folder_name
 
     def archive(self):
+        """
+        Get folders, archive and remove folders
+        """
         directories = [f for f in os.listdir(self.tmpFolder)
                        if os.path.isdir(os.path.join(self.tmpFolder, f))]
         for directory in directories:

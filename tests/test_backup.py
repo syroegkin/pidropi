@@ -16,20 +16,20 @@ class TestBackup(unittest.TestCase):
         """Destructor, unittest-style"""
         super(TestBackup, self).tearDown()
 
-    @mock.patch('backup.backup.os')
-    def test_init_backup_defaults(self, mock_os):
+    @mock.patch.object(Backup, 'set_tmp_folder')
+    def test_init_backup_defaults(self, mock_set_folder):
         config_changed = copy.deepcopy(config)
         del config_changed['tmp']
         backup = Backup(config_changed)
         # Just check we got defaults
         self.assertEqual(backup.subFoldersNum, backup.subFoldersNumDefault)
-        self.assertEqual(backup.tmpFolder, backup.tmpFolderDefault)
+        self.assertTrue(mock_set_folder.called)
 
-    @mock.patch('backup.backup.os')
-    def test_init_backup_with_config(self, mock_os):
+    @mock.patch.object(Backup, 'set_tmp_folder')
+    def test_init_backup_with_config(self, mock_set_folder):
         backup = Backup(config)
         self.assertEqual(backup.subFoldersNum, config['tmp']['subFolders'])
-        self.assertEqual(backup.tmpFolder, config['tmp']['tmpFolder'])
+        self.assertTrue(mock_set_folder.called)
 
     @mock.patch('backup.backup.os.path')
     @mock.patch('backup.backup.os')
