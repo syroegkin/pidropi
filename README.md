@@ -40,6 +40,12 @@ Required for all setups
 - **dropbox**
  - **token** token from the dropbox applications
 
+By default example script (`pidropi.py`) will try to use config.ini file in the same directory where it is placed.
+You can specify custom ini file using command line options i.e.:
+```bash
+$ pidropi.py -c ${HOME}/special_config.ini
+```
+
 ### Install ###
 
 You might need to install the following libraries on you Pi in order to fulfill lib requirements.
