@@ -5,4 +5,4 @@ dependencies:
   pre:
     - easy_install -U setuptools
     - pip install -r requirements.txt
-    - pip install -r requirements-dev.txt
+    - pip install requirements-dev.txt --allow-unverified
