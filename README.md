@@ -1,5 +1,7 @@
 # pidropi
 
+[![Circle CI](https://circleci.com/gh/syroegkin/pidropi.svg?style=svg)](https://circleci.com/gh/syroegkin/pidropi)
+
 Simple backup library which I made for my Raspberry Pi
 
 This library is able to backup data from file system / mysql.
