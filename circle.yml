@@ -1,0 +1,6 @@
+machine:
+  python:
+    version: pypy-2.7
+dependencies:
+  pre:
+    - pip install -r requirements-dev.txt
